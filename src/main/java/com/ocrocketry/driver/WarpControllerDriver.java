@@ -123,7 +123,7 @@ public class WarpControllerDriver extends DriverSidedTileEntity {
         @Callback(doc = "function():number -- current planet id")
         public Object[] currentPlanet(Context context, Arguments args) throws Exception {
             if(station != null) {
-                return new Object[]{station.getOrbitingPlanetId()};
+                return (!inWarp ? new Object[]{station.getOrbitingPlanetId()} : new Object[]{null, "in_warp"});
             } else {
                 return new Object[]{null, "not_on_station"};
             }
@@ -138,18 +138,6 @@ public class WarpControllerDriver extends DriverSidedTileEntity {
                 inWarp = false;
                 node().sendToReachable("computer.signal", "warpFinished", station.getOrbitingPlanetId());
             }
-        }
-
-        @Override
-        public void load(NBTTagCompound nbt) {
-            super.load(nbt);
-            inWarp = nbt.getBoolean("inWarp");
-        }
-
-        @Override
-        public void save(NBTTagCompound nbt) {
-            super.save(nbt);
-            nbt.setBoolean("inWarp", inWarp);
         }
 
         @Override

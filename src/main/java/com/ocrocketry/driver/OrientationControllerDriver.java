@@ -12,14 +12,12 @@ import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
-import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 
-import java.lang.reflect.Field;
+import static com.ocrocketry.util.ORUtils.isInRangeInc;
 
 public class OrientationControllerDriver extends DriverSidedTileEntity {
 
@@ -48,28 +46,19 @@ public class OrientationControllerDriver extends DriverSidedTileEntity {
             }
         }
 
-        @Callback(doc = "function():number -- get current X velocity")
-        public Object[] currentVelocityX(Context context, Arguments args) throws Exception {
+        @Callback(doc = "function():number, number, number -- get current velocity")
+        public Object[] currentVelocity(Context context, Arguments args) throws Exception {
             if(station != null) {
-                return new Object[]{getVelocity(0)};
+                return new Object[]{getVelocity(0), getVelocity(1), getVelocity(2)};
             } else {
                 return new Object[]{null, "not_on_station"};
             }
         }
 
-        @Callback(doc = "function():number -- get current Y velocity")
-        public Object[] currentVelocityY(Context context, Arguments args) throws Exception {
+        @Callback(doc = "function():number, number, number -- get current rotation")
+        public Object[] currentRotation(Context context, Arguments args) throws Exception {
             if(station != null) {
-                return new Object[]{getVelocity(1)};
-            } else {
-                return new Object[]{null, "not_on_station"};
-            }
-        }
-
-        @Callback(doc = "function():number -- get current Z velocity")
-        public Object[] currentVelocityZ(Context context, Arguments args) throws Exception {
-            if(station != null) {
-                return new Object[]{getVelocity(2)};
+                return new Object[]{station.getRotation(EnumFacing.EAST), station.getRotation(EnumFacing.UP), station.getRotation(EnumFacing.NORTH)};
             } else {
                 return new Object[]{null, "not_on_station"};
             }
@@ -82,6 +71,9 @@ public class OrientationControllerDriver extends DriverSidedTileEntity {
         @Callback(doc = "function(targetVelocityX:number, targetVelocityY:number, targetVelocityZ:number) -- set target velocity")
         public Object[] setTargetVelocity(Context context, Arguments args) throws Exception {
             if(station != null) {
+                if (!isInRangeInc(args.checkInteger(0), -60, 60) || !isInRangeInc(args.checkInteger(1), -60, 60) || !isInRangeInc(args.checkInteger(2), -60, 60)) {
+                    return new Object[] {null, "parameter_not_in_range"};
+                }
                 te.setProgress(0, args.checkInteger(0) + 60);
                 te.setProgress(1, args.checkInteger(1) + 60);
                 te.setProgress(2, args.checkInteger(2) + 60);

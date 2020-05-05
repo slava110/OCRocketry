@@ -1,6 +1,7 @@
 package com.ocrocketry.driver;
 
 import com.ocrocketry.OCRocketry;
+import com.ocrocketry.util.ORUtils;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -62,7 +63,11 @@ public class AltitudeControllerDriver extends DriverSidedTileEntity {
         @Callback(doc = "function(targetGravity:number) -- set target altitude")
         public Object[] setTargetAltitude(Context context, Arguments args) throws Exception {
             if(station != null) {
-                targetAltitudeField.set(te, (args.checkInteger(0) - 100) / 200);
+                int alt = (args.checkInteger(0) - 100) / 200;
+                if(!ORUtils.isInRangeInc(alt, 900, 38100)) {
+                    return new Object[] {null, "parameter_not_in_range"};
+                }
+                targetAltitudeField.set(te, alt);
                 te.markDirty();
                 return new Object[]{true};
             } else {

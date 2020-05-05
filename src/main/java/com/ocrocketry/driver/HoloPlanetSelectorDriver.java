@@ -42,15 +42,16 @@ public class HoloPlanetSelectorDriver extends DriverSidedTileEntity {
 
         }
 
-        @Callback(doc = "function():number -- current planet id. Will return -2147483647 if no planet found or ship in warp")
+        @Callback(doc = "function():number -- current planet id. Will return null if no planet found or ship in warp")
         public Object[] currentPlanet(Context context, Arguments args) throws Exception {
-            return new Object[]{getCurrentPlanetId()};
+            int dimId = getCurrentPlanetId();
+            return new Object[]{(dimId != -2147483647 ? dimId : null)};
         }
 
         @Callback(doc = "function(planetId:number) -- select planet with id")
         public Object[] selectPlanet(Context context, Arguments args) throws Exception {
             te.selectSystem(args.checkInteger(0));
-            return null;
+            return new Object[]{true};
         }
 
         private int getCurrentPlanetId(){

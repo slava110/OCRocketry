@@ -1,5 +1,6 @@
 package com.ocrocketry.driver;
 
+import com.ocrocketry.util.ORUtils;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -14,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -62,9 +64,12 @@ public class GravityControllerDriver extends DriverSidedTileEntity {
         @Callback(doc = "function(targetGravity:number) -- set target gravity")
         public Object[] setTargetGravity(Context context, Arguments args) throws Exception {
             if(station != null) {
-                targetGravityField.set(te, args.checkInteger(0));
+                int grav = args.checkInteger(0);
+                if(!ORUtils.isInRangeInc(grav, (ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 11 : 0), 100)) {
+                    return new Object[] {null, "parameter_not_in_range"};
+                }
+                targetGravityField.set(te, grav);
                 te.markDirty();
-
                 return new Object[]{true};
             } else {
                 return new Object[]{false, "not_on_station"};
