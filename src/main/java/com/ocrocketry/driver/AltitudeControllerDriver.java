@@ -64,7 +64,7 @@ public class AltitudeControllerDriver extends DriverSidedTileEntity {
         public Object[] setTargetAltitude(Context context, Arguments args) throws Exception {
             if(station != null) {
                 int alt = (args.checkInteger(0) - 100) / 200;
-                if(!ORUtils.isInRangeInc(alt, 900, 38100)) {
+                if(!ORUtils.isInRangeInc(alt, 4, 190)) {
                     return new Object[] {null, "parameter_not_in_range"};
                 }
                 targetAltitudeField.set(te, alt);

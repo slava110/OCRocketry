@@ -25,6 +25,10 @@ public class OCRocketry {
         Driver.add(new GravityControllerDriver());
         Driver.add(new AltitudeControllerDriver());
         Driver.add(new OrientationControllerDriver());
+
+        Driver.add(new MonitoringStationDriver());
+        Driver.add(new MiningLaserDriver());
+        //Driver.add(new LandingPadDriver());
     }
 
 }
