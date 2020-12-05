@@ -6,22 +6,23 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 
 import java.util.*;
 
+/**
+ * ToDo remove this shit
+ */
 public class AdvRocketryUtils {
 
-    public static List<Biome> scanPlanet(TileBiomeScanner te, SpaceStationObject station){
+    public static List<Biome> scanPlanet(TileBiomeScanner te, SpaceStationObject station) {
         boolean suitable = true;
 
-        for(int y = te.getPos().getY() - 4; y > 0; --y) {
+        for (int y = te.getPos().getY() - 4; y > 0; --y) {
             if (!te.getWorld().isAirBlock(new BlockPos(te.getPos().getX(), y, te.getPos().getZ()))) {
                 suitable = false;
                 break;
@@ -39,8 +40,8 @@ public class AdvRocketryUtils {
                 if (properties.getId() == 0) {
                     itr = Biome.REGISTRY.iterator();
 
-                    while(itr.hasNext()) {
-                        Biome biome = (Biome)itr.next();
+                    while (itr.hasNext()) {
+                        Biome biome = (Biome) itr.next();
                         if (biome != null) {
                             biomes.add(biome);
                         }
@@ -48,8 +49,8 @@ public class AdvRocketryUtils {
                 } else {
                     itr = properties.getBiomes().iterator();
 
-                    while(itr.hasNext()) {
-                        BiomeManager.BiomeEntry biome = (BiomeManager.BiomeEntry)itr.next();
+                    while (itr.hasNext()) {
+                        BiomeManager.BiomeEntry biome = (BiomeManager.BiomeEntry) itr.next();
                         biomes.add(biome.biome);
                     }
                 }
@@ -60,7 +61,7 @@ public class AdvRocketryUtils {
         }
     }
 
-    public static int getTravelCost(SpaceStationObject station){
+    public static int getTravelCost(SpaceStationObject station) {
         IDimensionProperties properties = station.getProperties().getParentProperties();
         IDimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody());
         if (properties == DimensionManager.defaultSpaceDimensionProperties) {
@@ -71,7 +72,7 @@ public class AdvRocketryUtils {
             return 500;
         }
 
-        while(destProperties.getParentProperties() != null && destProperties.isMoon()) {
+        while (destProperties.getParentProperties() != null && destProperties.isMoon()) {
             destProperties = destProperties.getParentProperties();
         }
 
@@ -79,14 +80,14 @@ public class AdvRocketryUtils {
             return 1;
         }
 
-        while(true) {
+        while (true) {
             if (!properties.isMoon()) {
                 if (properties.getStar().getId() == destProperties.getStar().getId()) {
-                    double x1 = (double)((float)properties.getOrbitalDist() * MathHelper.cos((float)properties.getOrbitTheta()));
-                    double y1 = (double)((float)properties.getOrbitalDist() * MathHelper.sin((float)properties.getOrbitTheta()));
-                    double x2 = (double)((float)destProperties.getOrbitalDist() * MathHelper.cos((float)destProperties.getOrbitTheta()));
-                    double y2 = (double)((float)destProperties.getOrbitalDist() * MathHelper.sin((float)destProperties.getOrbitTheta()));
-                    return Math.max((int)Math.sqrt(Math.pow(x1 - x2, 2.0D) + Math.pow(y1 - y2, 2.0D)), 1);
+                    double x1 = (double) ((float) properties.getOrbitalDist() * MathHelper.cos((float) properties.getOrbitTheta()));
+                    double y1 = (double) ((float) properties.getOrbitalDist() * MathHelper.sin((float) properties.getOrbitTheta()));
+                    double x2 = (double) ((float) destProperties.getOrbitalDist() * MathHelper.cos((float) destProperties.getOrbitTheta()));
+                    double y2 = (double) ((float) destProperties.getOrbitalDist() * MathHelper.sin((float) destProperties.getOrbitTheta()));
+                    return Math.max((int) Math.sqrt(Math.pow(x1 - x2, 2.0D) + Math.pow(y1 - y2, 2.0D)), 1);
                 }
                 break;
             }
@@ -103,13 +104,13 @@ public class AdvRocketryUtils {
         } else {
             List<ItemStack> list = new LinkedList<>(properties.getRequiredArtifacts());
 
-            for(int i = 4; i <= 8; ++i) {
+            for (int i = 4; i <= 8; ++i) {
                 ItemStack stack2 = te.getStackInSlot(i);
                 if (stack2 != null) {
                     Iterator<?> itr = list.iterator();
 
-                    while(itr.hasNext()) {
-                        ItemStack stackInList = (ItemStack)itr.next();
+                    while (itr.hasNext()) {
+                        ItemStack stackInList = (ItemStack) itr.next();
                         if (stackInList.getItem().equals(stack2.getItem()) && stackInList.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stackInList, stack2) && stack2.getCount() >= stackInList.getCount()) {
                             itr.remove();
                         }

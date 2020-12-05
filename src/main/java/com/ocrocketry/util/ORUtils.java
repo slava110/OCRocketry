@@ -1,12 +1,6 @@
 package com.ocrocketry.util;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
-
 public class ORUtils {
-
-    /*public static boolean isInRange(int val, int min, int max) {
-        return val > min && val < max;
-    }*/
 
     public static boolean isInRangeInc(int val, int min, int max) {
         return val >= min && val <= max;

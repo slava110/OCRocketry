@@ -14,9 +14,6 @@ public class OCRocketry {
 
     public static Logger logger = LogManager.getLogger(MODID);
 
-    @Mod.Instance(OCRocketry.MODID)
-    public static OCRocketry instance;
-
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         Driver.add(new WarpControllerDriver());
@@ -28,6 +25,8 @@ public class OCRocketry {
 
         Driver.add(new MonitoringStationDriver());
         Driver.add(new MiningLaserDriver());
+        Driver.add(new AtmosphereDetectorDriver());
+
         //Driver.add(new LandingPadDriver());
     }
 
