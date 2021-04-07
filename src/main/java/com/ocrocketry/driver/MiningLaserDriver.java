@@ -1,7 +1,12 @@
 package com.ocrocketry.driver;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+
 import com.ocrocketry.OCRocketry;
 import com.ocrocketry.util.ORUtils;
+
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -11,24 +16,17 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 
 public class MiningLaserDriver extends DriverSidedTileEntity {
     private static MethodHandle resetSpiralMethod;
 
     static {
         try {
-            Method resetSpiralMethod1 = TileSpaceLaser.class.getDeclaredMethod("resetSpiral");
+            Method resetSpiralMethod1 = TileOrbitalLaserDrill.class.getDeclaredMethod("resetSpiral");
             resetSpiralMethod1.setAccessible(true);
             resetSpiralMethod = MethodHandles.lookup().unreflect(resetSpiralMethod1);
         } catch (IllegalAccessException | NoSuchMethodException e) {
@@ -38,18 +36,18 @@ public class MiningLaserDriver extends DriverSidedTileEntity {
 
     @Override
     public Class<?> getTileEntityClass() {
-        return TileSpaceLaser.class;
+        return TileOrbitalLaserDrill.class;
     }
 
     @Override
     public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing facing) {
-        return new Environment((TileSpaceLaser) world.getTileEntity(pos), pos);
+        return new Environment((TileOrbitalLaserDrill) world.getTileEntity(pos), pos);
     }
 
     public static class Environment extends AbstractManagedEnvironment implements NamedBlock {
-        private final TileSpaceLaser te;
+        private final TileOrbitalLaserDrill te;
 
-        public Environment(final TileSpaceLaser laser, final BlockPos pos) {
+        public Environment(final TileOrbitalLaserDrill laser, final BlockPos pos) {
             setNode(Network.newNode(this, Visibility.Network).withComponent(preferredName(), Visibility.Network).create());
             this.te = laser;
         }
@@ -64,7 +62,7 @@ public class MiningLaserDriver extends DriverSidedTileEntity {
             te.laserX = args.checkInteger(0);
             te.laserZ = args.checkInteger(1);
             te.setFinished(false);
-            if (te.getMode() == TileSpaceLaser.MODE.SPIRAL) {
+            if (te.getMode() == TileOrbitalLaserDrill.MODE.SPIRAL) {
                 try {
                     resetSpiralMethod.invoke(te);
                 } catch (Throwable throwable) {
@@ -93,9 +91,9 @@ public class MiningLaserDriver extends DriverSidedTileEntity {
         @Callback(doc = "function(mode:string) -- Set mining laser mode. Available modes: single, line_x, line_z, spiral")
         public Object[] setMode(Context ctx, Arguments args) throws Exception {
             String modeName = args.checkString(0).toUpperCase();
-            if(!ORUtils.enumContains(TileSpaceLaser.MODE.class, modeName))
+            if (!ORUtils.enumContains(TileOrbitalLaserDrill.MODE.class, modeName))
                 return new Object[]{false, "mode_not_found"};
-            te.setMode(TileSpaceLaser.MODE.valueOf(modeName));
+            te.setMode(TileOrbitalLaserDrill.MODE.valueOf(modeName));
             te.markDirty();
             return new Object[]{true};
         }

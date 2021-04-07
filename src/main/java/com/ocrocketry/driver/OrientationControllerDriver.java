@@ -1,5 +1,7 @@
 package com.ocrocketry.driver;
 
+import static com.ocrocketry.util.ORUtils.isInRangeInc;
+
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -15,31 +17,29 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
-import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
-
-import static com.ocrocketry.util.ORUtils.isInRangeInc;
+import zmaster587.advancedRocketry.tile.station.TileStationOrientationController;
 
 public class OrientationControllerDriver extends DriverSidedTileEntity {
 
     @Override
     public Class<?> getTileEntityClass() {
-        return TileStationOrientationControl.class;
+        return TileStationOrientationController.class;
     }
 
     @Override
     public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing facing) {
-        return new Environment((TileStationOrientationControl) world.getTileEntity(pos), pos);
+        return new Environment((TileStationOrientationController) world.getTileEntity(pos), pos);
     }
 
     public static class Environment extends AbstractManagedEnvironment implements NamedBlock {
-        private final TileStationOrientationControl te;
+        private final TileStationOrientationController te;
         private final SpaceStationObject station;
 
-        public Environment(final TileStationOrientationControl tile, final BlockPos pos) {
+        public Environment(final TileStationOrientationController tile, final BlockPos pos) {
             setNode(Network.newNode(this, Visibility.Network).withComponent(preferredName(), Visibility.Network).create());
             this.te = tile;
             ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-            if(obj instanceof SpaceStationObject) {
+            if (obj instanceof SpaceStationObject) {
                 this.station = (SpaceStationObject) obj;
             } else {
                 this.station = null;
@@ -48,7 +48,7 @@ public class OrientationControllerDriver extends DriverSidedTileEntity {
 
         @Callback(doc = "function():number, number, number -- get current velocity")
         public Object[] currentVelocity(Context context, Arguments args) throws Exception {
-            if(station != null) {
+            if (station != null) {
                 return new Object[]{getVelocity(0), getVelocity(1), getVelocity(2)};
             } else {
                 return new Object[]{null, "not_on_station"};
@@ -57,7 +57,7 @@ public class OrientationControllerDriver extends DriverSidedTileEntity {
 
         @Callback(doc = "function():number, number, number -- get current rotation")
         public Object[] currentRotation(Context context, Arguments args) throws Exception {
-            if(station != null) {
+            if (station != null) {
                 return new Object[]{station.getRotation(EnumFacing.EAST), station.getRotation(EnumFacing.UP), station.getRotation(EnumFacing.NORTH)};
             } else {
                 return new Object[]{null, "not_on_station"};
@@ -70,19 +70,19 @@ public class OrientationControllerDriver extends DriverSidedTileEntity {
 
         @Callback(doc = "function(targetVelocityX:number, targetVelocityY:number, targetVelocityZ:number) -- set target velocity")
         public Object[] setTargetVelocity(Context context, Arguments args) throws Exception {
-            if(station != null) {
+            if (station != null) {
                 if (!isInRangeInc(args.checkInteger(0), -60, 60) || !isInRangeInc(args.checkInteger(1), -60, 60) || !isInRangeInc(args.checkInteger(2), -60, 60)) {
-                    return new Object[] {null, "parameter_not_in_range"};
+                    return new Object[]{null, "parameter_not_in_range"};
                 }
-                te.setProgress(0, args.checkInteger(0) + 60);
-                te.setProgress(1, args.checkInteger(1) + 60);
-                te.setProgress(2, args.checkInteger(2) + 60);
-                te.markDirty();
+                station.targetRotationsPerHour[0] = args.checkInteger(0);
+                station.targetRotationsPerHour[1] = args.checkInteger(1);
+                station.targetRotationsPerHour[2] = args.checkInteger(2);
                 return new Object[]{true};
             } else {
                 return new Object[]{false, "not_on_station"};
             }
         }
+
         @Override
         public String preferredName() {
             return "orientationcontroller";

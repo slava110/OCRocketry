@@ -1,5 +1,7 @@
 package com.ocrocketry.driver;
 
+import javax.annotation.Nonnull;
+
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -15,9 +17,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.tile.TileAtmosphereDetector;
-
-import javax.annotation.Nonnull;
+import zmaster587.advancedRocketry.tile.atmosphere.TileAtmosphereDetector;
 
 public class AtmosphereDetectorDriver extends DriverSidedTileEntity {
 

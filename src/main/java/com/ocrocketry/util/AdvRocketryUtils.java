@@ -1,5 +1,11 @@
 package com.ocrocketry.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -10,9 +16,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
-import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
-
-import java.util.*;
+import zmaster587.advancedRocketry.tile.station.TileWarpController;
 
 /**
  * ToDo remove this shit
@@ -98,7 +102,7 @@ public class AdvRocketryUtils {
         return 2147483647;
     }
 
-    public static boolean meetsArtifactReq(TileWarpShipMonitor te, DimensionProperties properties) {
+    public static boolean meetsArtifactReq(TileWarpController te, DimensionProperties properties) {
         if (properties.getRequiredArtifacts().isEmpty()) {
             return true;
         } else {

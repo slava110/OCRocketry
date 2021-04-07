@@ -1,6 +1,7 @@
 package com.ocrocketry.driver;
 
 import com.ocrocketry.util.AdvRocketryUtils;
+
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -13,7 +14,6 @@ import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -39,7 +39,7 @@ public class BiomeScannerDriver extends DriverSidedTileEntity {
             setNode(Network.newNode(this, Visibility.Network).withComponent(preferredName(), Visibility.Network).create());
             this.te = scanner;
             ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-            if(obj instanceof SpaceStationObject) {
+            if (obj instanceof SpaceStationObject) {
                 this.station = (SpaceStationObject) obj;
             } else {
                 this.station = null;
@@ -48,7 +48,7 @@ public class BiomeScannerDriver extends DriverSidedTileEntity {
 
         @Callback(doc = "function(withModId:boolean):table -- scan planet and get list of biomes")
         public Object[] scan(Context context, Arguments args) throws Exception {
-            if(station != null) {
+            if (station != null) {
                 boolean withModId = args.optBoolean(0, false);
                 return AdvRocketryUtils.scanPlanet(te, station).stream()
                         .map(biome -> (withModId ? biome.getRegistryName().toString() : biome.getRegistryName().getResourcePath()))
